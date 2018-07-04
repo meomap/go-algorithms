@@ -1,10 +1,23 @@
 // Package skyline provides Skyline Problem tests
 package skyline
 
-import (
-	"fmt"
-	"testing"
-)
+import "testing"
+
+var multiple = testCase{
+	in: []building{
+		{1, 11, 5}, {2, 6, 7}, {3, 13, 9}, {12, 7, 16}, {14, 3, 25},
+		{19, 18, 22},
+	},
+	expect: []strip{
+		{1, 11}, {3, 13}, {9, 0}, {12, 7}, {16, 3}, {19, 18},
+		{22, 3}, {25, 0},
+	},
+}
+
+type testCase struct {
+	in     []building
+	expect []strip
+}
 
 func TestSkylineBruteforce(t *testing.T) {
 	// simple case - 1 building
@@ -18,20 +31,17 @@ func TestSkylineBruteforce(t *testing.T) {
 	assertStripsMatched(t, expect1, out1)
 
 	// multiple buildings
-	in2 := []building{
-		{1, 11, 5}, {2, 6, 7}, {3, 13, 9}, {12, 7, 16}, {14, 3, 25},
-		{19, 18, 22},
-	}
-	expect2 := []strip{
-		{1, 11}, {3, 13}, {9, 0}, {12, 7}, {16, 3}, {19, 18},
-		{22, 3}, {25, 0},
-	}
-	out2 := BruteForce(in2)
-	assertStripsMatched(t, expect2, out2)
+	out2 := BruteForce(multiple.in)
+	assertStripsMatched(t, multiple.expect, out2)
+}
+
+func TestSkylineDivideAndConquor(t *testing.T) {
+	out := DivideAndConquor(multiple.in)
+	assertStripsMatched(t, multiple.expect, out)
 }
 
 func assertStripsMatched(t *testing.T, expected, actual []strip) {
-	fmt.Printf("expected=%+v\n actual=%+v \n", expected, actual)
+	//fmt.Printf("expected=%+v\n actual=%+v \n", expected, actual)
 	lenE, lenA := len(expected), len(actual)
 	if lenE != lenA {
 		t.Errorf("Expect length %d but got length %d\n", lenE, lenA)
