@@ -1,26 +1,16 @@
 // Package median provides Median Of Two Sorted Arrays implementation
+// https://www.geeksforgeeks.org/median-of-two-sorted-arrays/
 package median
 
 import (
-	"errors"
 	"fmt"
+	"math"
 )
 
-func validateSorted(in []int) error {
-	if len(in) == 1 {
-		return nil
-	}
-	for i := 1; i < len(in); i++ {
-		if in[i-1] > in[i] {
-			return errors.New(fmt.Sprintf("Array not sorted, index[%d]=%d index[%d]=%d", i-1, in[i-1], i, in[i]))
-		}
-	}
-	return nil
-}
-
-// SearchByMerging merges two sorted array then find the median by average value
+// SearchByLinear merges two sorted array first then find the median by average value
+// from two middle value
 // Complexity: N
-func SearchByMerging(l, r []int) int {
+func SearchByLinear(l, r []int) int {
 	lenL, lenR := len(l), len(r)
 	i, j := 0, 0
 	merged := []int{}
@@ -44,4 +34,43 @@ func SearchByMerging(l, r []int) int {
 	mid1 := (lenM - 2) / 2
 	mid2 := lenM / 2
 	return (merged[mid1] + merged[mid2]) / 2
+}
+
+// return input array median value
+// i.e {15, 26, 38} => 26
+func median(in []int) (int, int) {
+	if len(in) == 0 {
+		return -1, -1
+	}
+	idx := len(in) / 2
+	return idx, in[idx]
+}
+
+// SearchByComparingMedians compares the medians found from two subsets then
+// reduce subsets size until reasonable solution found
+func SearchByComparingMedians(l, r []int) int {
+	fmt.Printf("IN l = %+v\n", l)
+	fmt.Printf("IN r = %+v\n", r)
+	lenL, lenR := len(l), len(r)
+	if lenL == lenR && lenL == 2 {
+		// [l1:l2] [r1:r2] => probably median is between l2, r1
+		return int(math.Max(float64(l[0]), float64(r[0]))+math.Min(float64(l[1]), float64(r[1]))) / 2
+	}
+	lidx, lmed := median(l)
+	ridx, rmed := median(r)
+	if lmed == rmed {
+		// found matching median
+		return lmed
+	}
+	if lmed < rmed {
+		// median is at either at left[lm:] or right[:rm+1]
+		fmt.Printf("l = %+v\n", l)
+		fmt.Printf("lmed = %+v\n", lmed)
+		fmt.Printf("lidx = %+v\n", lidx)
+		fmt.Printf("r = %+v\n", r)
+		fmt.Printf("rmed = %+v\n", rmed)
+		fmt.Printf("ridx = %+v\n", ridx)
+		return SearchByComparingMedians(l[lidx:], r[:ridx+1])
+	}
+	return SearchByComparingMedians(l[:lidx+1], r[ridx:])
 }

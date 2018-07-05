@@ -10,7 +10,14 @@ var (
 )
 
 func TestNSolution(t *testing.T) {
-	out := SearchByMerging(in1, in2)
+	out := SearchByLinear(in1, in2)
+	if expected != out {
+		t.Errorf("Expect %d but got %d", expected, out)
+	}
+}
+
+func TestLogNSolution(t *testing.T) {
+	out := SearchByComparingMedians(in1, in2)
 	if expected != out {
 		t.Errorf("Expect %d but got %d", expected, out)
 	}
