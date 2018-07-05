@@ -2,10 +2,7 @@
 // https://www.geeksforgeeks.org/median-of-two-sorted-arrays/
 package median
 
-import (
-	"fmt"
-	"math"
-)
+import "math"
 
 // SearchByLinear merges two sorted array first then find the median by average value
 // from two middle value
@@ -49,8 +46,6 @@ func median(in []int) (int, int) {
 // SearchByComparingMedians compares the medians found from two subsets then
 // reduce subsets size until reasonable solution found
 func SearchByComparingMedians(l, r []int) int {
-	fmt.Printf("IN l = %+v\n", l)
-	fmt.Printf("IN r = %+v\n", r)
 	lenL, lenR := len(l), len(r)
 	if lenL == lenR && lenL == 2 {
 		// [l1:l2] [r1:r2] => probably median is between l2, r1
@@ -64,12 +59,6 @@ func SearchByComparingMedians(l, r []int) int {
 	}
 	if lmed < rmed {
 		// median is at either at left[lm:] or right[:rm+1]
-		fmt.Printf("l = %+v\n", l)
-		fmt.Printf("lmed = %+v\n", lmed)
-		fmt.Printf("lidx = %+v\n", lidx)
-		fmt.Printf("r = %+v\n", r)
-		fmt.Printf("rmed = %+v\n", rmed)
-		fmt.Printf("ridx = %+v\n", ridx)
 		return SearchByComparingMedians(l[lidx:], r[:ridx+1])
 	}
 	return SearchByComparingMedians(l[:lidx+1], r[ridx:])
