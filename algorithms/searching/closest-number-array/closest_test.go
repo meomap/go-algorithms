@@ -36,3 +36,7 @@ func runTest(t *testing.T, testData []testCase, algorithm searchAlgo) {
 func TestLinear(t *testing.T) {
 	runTest(t, data, searchLinear)
 }
+
+func TestBinary(t *testing.T) {
+	runTest(t, data, searchBinary)
+}
