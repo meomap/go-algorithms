@@ -33,3 +33,7 @@ func runTest(t *testing.T, testData []testCase, algorithm searchAlgo) {
 func TestBruteForce(t *testing.T) {
 	runTest(t, data, bruteForce)
 }
+
+func TestLinearScan(t *testing.T) {
+	runTest(t, data, linearScan)
+}
